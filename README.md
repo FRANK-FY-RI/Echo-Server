@@ -41,7 +41,11 @@ If on different machine
 
 ## Demo
 
-<video src="echo_server_demo.webm" controls width="800"></video>
+<video src="https://github.com/user-attachments/assets/your-video-id"
+       controls
+       muted
+       width="800">
+</video>
 
 ## Requirements
 - POSIX-compliant operating system (Linux, macOS, BSD)
