@@ -41,7 +41,7 @@ If on different machine
 
 ## Demo
 
-https://github.com/FRANK-FY-RI/Echo-Server/blob/main/echo_server_demo.webm
+<video src="echo_server_demo.webm" controls width="800"></video>
 
 ## Requirements
 - POSIX-compliant operating system (Linux, macOS, BSD)
