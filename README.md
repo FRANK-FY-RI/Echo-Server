@@ -1,4 +1,7 @@
 # Echo Server
+
+![](echo_server_demo.gif)
+
 A simple server which echoes back whatever the client transmits.
 
 Made for learning purposes, referenced from the book "Beej’s Guide to Network Programming" by Brian “Beej Jorgensen” Hall
@@ -38,10 +41,6 @@ If on different machine
 ```bash
 ./client <ip_address>
 ```
-
-## Demo
-
-![](https://github.com/user-attachments/assets/79c72649-9bdc-460a-97a6-4d4aa8fe22cf)
 
 ## Requirements
 - POSIX-compliant operating system (Linux, macOS, BSD)
