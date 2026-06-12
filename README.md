@@ -5,8 +5,9 @@ Made for learning purposes, referenced from the book "Beej’s Guide to Network 
 
 ## Specifications
 - Uses Stream Socket and TCP
-- Uses a process-per-connection model (`fork()`) to handle multiple clients concurrently
-- Connection can be terminated by sending "exit"
+- Uses a fixed-size thread pool of 12 worker threads (configurable in the source) to serve multiple clients concurrently.
+- Listens on TCP port 7777 by default (modifiable in the source).
+- A client can terminate its session by sending "exit".
 
 ## How to use
 
@@ -14,7 +15,7 @@ Made for learning purposes, referenced from the book "Beej’s Guide to Network 
 
 Compile the server
 ```bash
-g++ -std=c++11 server.cpp -o server
+g++ -std=c++17 server.cpp -o server -pthread
 ```
 Run the server
 ```bash
@@ -24,7 +25,7 @@ Run the server
 
 Compile the client
 ```bash
-g++ -std=c++11 client.cpp -o client
+g++ -std=c++17 client.cpp -o client
 ```
 Run the client with the address to the server
 
@@ -38,7 +39,11 @@ If on different machine
 ./client <ip_address>
 ```
 
+## Demo
+
+https://github.com/FRANK-FY-RI/Echo-Server/blob/main/echo_server_demo.webm
+
 ## Requirements
 - POSIX-compliant operating system (Linux, macOS, BSD)
-- C++11 or later
-- An available TCP port 7777 (or modify PORT in the source)
+- C++17 or later
+- TCP port 7777 must be available, or change the `PORT` constant in the source.
