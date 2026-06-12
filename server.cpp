@@ -7,6 +7,7 @@
 #include <sys/wait.h>
 #include <netdb.h>
 #include <signal.h>
+#include "threadpool/threadpool.hpp"
 
 #define PORT "7777"
 #define BACKLOG 10
@@ -17,6 +18,25 @@ void sigchld_handler(int s) {
     int saved_err = errno;
     while(waitpid(-1, NULL, WNOHANG)>0);
     errno = saved_err;
+}
+
+void new_connection(int new_fd) {
+    if(send(new_fd, "Hello, client\n", 14, 0) == -1) {
+        std::cerr<<"send: "<<strerror(errno)<<'\n';
+    } 
+    int bytes_rec;
+    char msg[MAXDATASIZE+1];
+    while((bytes_rec = recv(new_fd, msg, MAXDATASIZE, 0))>0) {
+        msg[bytes_rec] = '\0';
+        if(send(new_fd, msg, bytes_rec, 0) == -1) {
+            std::cerr<<"send: "<<strerror(errno)<<'\n';
+        }
+    }
+    std::cout<<"connection ended\n";
+    close(new_fd);
+    if(bytes_rec == -1) {
+        std::cerr<<"recv: "<<strerror(errno)<<'\n';
+    }
 }
 
 int main() {
@@ -78,6 +98,8 @@ int main() {
 
     std::cout<<"Waiting for connections...\n";
 
+    threadpool pool(12);
+
     while(1) {
         socklen_t addr_size = sizeof(their_addr);
         if((new_fd = accept(sockfd, (sockaddr*)&their_addr, &addr_size)) == -1) {
@@ -85,33 +107,7 @@ int main() {
             continue;
         }
         std::cout<<"connection established\n";
-        pid_t pid = fork();
-        if(pid == -1) {
-            std::cerr<<"fork: "<<strerror(errno)<<'\n';
-            close(new_fd);
-            continue;
-        } 
-        else if(pid == 0) {
-            close(sockfd);
-            if(send(new_fd, "Hello, client\n", 14, 0) == -1) {
-                std::cerr<<"send: "<<strerror(errno)<<'\n';
-            } 
-            int bytes_rec;
-            char msg[MAXDATASIZE+1];
-            while((bytes_rec = recv(new_fd, msg, MAXDATASIZE, 0))>0) {
-                msg[bytes_rec] = '\0';
-                if(send(new_fd, msg, bytes_rec, 0) == -1) {
-                    std::cerr<<"send: "<<strerror(errno)<<'\n';
-                }
-            }
-            std::cout<<"connection ended\n";
-            close(new_fd);
-            if(bytes_rec == -1) {
-                std::cerr<<"recv: "<<strerror(errno)<<'\n';
-            }
-            exit(0);
-        }
-        close(new_fd); 
+        pool.submit([new_fd]() {new_connection(new_fd);}); 
     }
     return 0;
 }
