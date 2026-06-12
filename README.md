@@ -41,7 +41,8 @@ If on different machine
 
 ## Demo
 
-<video src="https://github.com/user-attachments/assets/79c72649-9bdc-460a-97a6-4d4aa8fe22cf" autoplay loop muted playsinline width="100%"></video>
+<video src="https://github.com/user-attachments/assets/79c72649-9bdc-460a-97a6-4d4aa8fe22cf" autoplay="autoplay" loop="loop" muted="muted" playsinline style="max-width: 100%;">
+</video>
 
 ## Requirements
 - POSIX-compliant operating system (Linux, macOS, BSD)
