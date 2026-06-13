@@ -64,11 +64,11 @@ int main(int argc, char *argv[]) {
     std::string s;
     while(std::getline(std::cin, s)) {
         // std::cout<<s<<'\n';
+        if(s == "exit") break;
         if(send(sockfd, s.c_str(), s.size(), 0) == -1) {
             std::cerr<<"send: "<<strerror(errno)<<'\n';
         } 
         
-        if(s == "exit") break;
         rec(sockfd);
     }
     close(sockfd);
