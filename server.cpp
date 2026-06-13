@@ -13,13 +13,6 @@
 #define BACKLOG 10
 #define MAXDATASIZE 100
 
-void sigchld_handler(int s) {
-    static_cast<void>(s);
-    int saved_err = errno;
-    while(waitpid(-1, NULL, WNOHANG)>0);
-    errno = saved_err;
-}
-
 void new_connection(int new_fd) {
     if(send(new_fd, "Hello, client\n", 14, 0) == -1) {
         std::cerr<<"send: "<<strerror(errno)<<'\n';
@@ -27,10 +20,10 @@ void new_connection(int new_fd) {
     int bytes_rec;
     char msg[MAXDATASIZE+1];
     while((bytes_rec = recv(new_fd, msg, MAXDATASIZE, 0))>0) {
-        msg[bytes_rec] = '\0';
+        msg[bytes_rec] = '\0'; 
         if(send(new_fd, msg, bytes_rec, 0) == -1) {
             std::cerr<<"send: "<<strerror(errno)<<'\n';
-        }
+        } 
     }
     std::cout<<"connection ended\n";
     close(new_fd);
@@ -86,15 +79,7 @@ int main() {
     if(listen(sockfd, BACKLOG) == -1) {
         std::cerr<<"listen: "<<strerror(errno)<<'\n';
         exit(1);
-    }
-
-    sa.sa_handler = sigchld_handler;
-    sigemptyset(&sa.sa_mask);
-    sa.sa_flags = SA_RESTART;
-    if(sigaction(SIGCHLD, &sa, nullptr) == -1) {
-        std::cerr<<"sigaction: "<<strerror(errno)<<'\n';
-        exit(1);
-    }
+    } 
 
     std::cout<<"Waiting for connections...\n";
 
