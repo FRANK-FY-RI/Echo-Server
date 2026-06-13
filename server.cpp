@@ -87,7 +87,7 @@ int main() {
 
     while(1) {
         socklen_t addr_size = sizeof(their_addr);
-        if((new_fd = accept(sockfd, (sockaddr*)&their_addr, &addr_size)) == -1) {
+        if((new_fd = accept(sockfd, nullptr, 0)) == -1) {
             std::cerr<<"server:new socket: "<<strerror(errno)<<'\n';
             continue;
         }
